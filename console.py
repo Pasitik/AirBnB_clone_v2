@@ -116,7 +116,6 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, args):
         """ Create an object of any class"""
         args = args.partition(' ')
-        print(args)
         if not args:
             print("** class name missing **")
             return
@@ -125,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
             return
         else:
             cls_props = args[2].split(' ')
-            attr_dict = {}
+            new_instance = HBNBCommand.classes[args[0]]()
             for paired_attr in cls_props:
                 if paired_attr != '' and paired_attr != ' ':
                     splitted_attr = paired_attr.partition('=')
@@ -142,14 +141,8 @@ class HBNBCommand(cmd.Cmd):
                         val = int(val)
                     else:
                         continue
-                    attr_dict.update({key: val})
+                    setattr(new_instance, key, val)
 
-            if len(attr_dict.items()) > 0:
-                new_instance = HBNBCommand.classes[args[0]](attr_dict)
-                new_instance.__dict__.update(attr_dict)
-            else:
-                new_instance = HBNBCommand.classes[args[0]]()
-            storage.save()
             print(new_instance.id)
             storage.save()
 
