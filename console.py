@@ -135,10 +135,13 @@ class HBNBCommand(cmd.Cmd):
 
                     if val[0] == '\"':
                         val = val.strip('"')
+                        val = val.replace('_', ' ')
                     elif val.find('.') > -1:
                         val = float(val)
-                    else:
+                    elif val.isdigit():
                         val = int(val)
+                    else:
+                        continue
                     attr_dict.update({key: val})
 
             if len(attr_dict.items()) > 0:
