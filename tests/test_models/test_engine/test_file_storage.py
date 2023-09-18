@@ -105,5 +105,18 @@ class test_fileStorage(unittest.TestCase):
     def test_storage_var_created(self):
         """ FileStorage object storage created """
         from models.engine.file_storage import FileStorage
-        print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_storage_obj_updated(self):
+        """  """
+        from models.state import State
+        new = State()
+        new.__dict__.update({"name": "Accra"})
+        storage.save()
+        store = storage.all()
+        temp = {}
+        for key, val in store.items():
+            temp = val
+        self.assertTrue(temp.name, 'Accra')
+            
+        
