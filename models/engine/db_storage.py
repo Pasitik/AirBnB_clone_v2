@@ -1,4 +1,6 @@
 from sqlalchemy import create_engine, session_maker
+import os
+
 
 Class DBStorage:
     __engine = None
@@ -6,6 +8,7 @@ Class DBStorage:
 
     def __init__(self):
         self.__engine = create_enginie('mysql+mysqldb://{}:{}@{}:3306/{}'.format("hbnb_dev", "hbnb_dev_pwd", "localhost", "hbnb_dev_db"), pool_pre_ping=True)
-        self.__session = session_maker(bind=engine) 
+        if os.env("HBNB_ENV") == "test":
+            Base.metadata.drop_all(self.__engine)
         
 
