@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, DateTime
-
+import models
 Base = declarative_base()
 
 
@@ -66,4 +66,3 @@ class BaseModel:
     def delete(self):
         """ """
         models.storage.delete(self)
-        return dictionary

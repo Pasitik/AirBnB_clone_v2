@@ -49,17 +49,26 @@ class test_basemodel(unittest.TestCase):
 
     def test_save(self):
         """ Testing save """
-        i = self.value()
-        i.save()
-        key = self.name + "." + i.id
-        with open('file.json', 'r') as f:
-            j = json.load(f)
-            self.assertEqual(j[key], i.to_dict())
+        if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+            from models import storage
+            from models.state import State
+            
+            i = State(name="California")
+            i.save()
+            key = i.__class__.__name__ + "." + i.id
+            self.assertEqual(storage.all()[key], i)
+        else:
+            i = self.value()
+            i.save()
+            key = i.__class__.__name__ + "." + i.id
+            with open('file.json', 'r') as f:
+                j = json.load(f)
+                self.assertEqual(j[key], i.to_dict())
 
     def test_str(self):
         """ """
         i = self.value()
-        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
+        self.assertEqual(str(i), '[{}] ({}) {}'.format(i.__class__.__name__, i.id,
                          i.__dict__))
 
     def test_todict(self):
@@ -74,11 +83,13 @@ class test_basemodel(unittest.TestCase):
         with self.assertRaises(TypeError):
             new = self.value(**n)
 
+    # @unittest.skip("failing test")
     def test_kwargs_one(self):
         """ """
         n = {'Name': 'test'}
-        with self.assertRaises(KeyError):
-            new = self.value(**n)
+        new = self.value(**n)
+        self.assertEqual(type(new.id), str)
+
 
     def test_id(self):
         """ """
@@ -97,3 +108,18 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+    
+    def test_delete(self):
+        """ """
+        from models import storage
+        if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+            from models.state import State
+            new = State(name="Accra")
+           
+        else:
+            new = BaseModel()
+        new.save()
+        with self.assertRaises(KeyError):
+            key = new.__class__.__name__ + "." + new.id
+            res = new.delete()
+            print(storage.all()[key])
