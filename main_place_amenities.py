@@ -35,13 +35,15 @@ amenity_3 = Amenity(name="Oven")
 amenity_3.save()
 
 # link place_1 with 2 amenities
-#place_1.amenities.append(amenity_1)
-#place_1.amenities.append(amenity_2)
+place_1.amenities.append(amenity_1)
+place_1.amenities.append(amenity_2)
+
 
 # link place_2 with 3 amenities
-#place_2.amenities.append(amenity_1)
-#place_2.amenities.append(amenity_2)
-#place_2.amenities.append(amenity_3)
+place_2.amenities.append(amenity_1)
+place_2.amenities.append(amenity_2)
+place_2.amenities.append(amenity_3)
+
 
 storage.save()
 
