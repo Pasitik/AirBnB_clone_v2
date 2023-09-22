@@ -42,7 +42,6 @@ class DBStorage:
         for obj in row:
             if cls is not None:
                 key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                obj.__dict__ = obj.to_dict()
                 query_result[key] = obj
             else:
                 for row in obj:

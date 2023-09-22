@@ -1,3 +1,6 @@
+-- Doc
+USE hbnb_dev_db;
+
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS place_amenity;
 DROP TABLE IF EXISTS places;
