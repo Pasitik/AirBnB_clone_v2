@@ -31,7 +31,10 @@ class test_Storage(unittest.TestCase):
         for key in del_list:
             if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
                 class_name = key.partition('.')[0]
-                storage.truncate_tables(classes[class_name], storage.all()[key].id)
+                try:
+                    storage.truncate_tables(classes[class_name], storage.all()[key].id)
+                except:
+                    pass
             else:
                 del storage.all()[key]
 
