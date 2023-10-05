@@ -1,14 +1,21 @@
 #!/usr/bin/python3
 from models.base_model import Base
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
+from models.amenity import Amenity
+from models.place import Place
+from models.user import User
+from models.review import Review
+from models.user import User
+from models.state import State
+from models.city import City
 
 
 class DBStorage:
+    """"""
     __engine = None
     __session = None
-
 
     def __init__(self):
         env = os.environ
@@ -22,16 +29,19 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        if cls:
-            result = self.__session.query(cls).all()
+        classes = [State, City, Place, Review, User, Amenity]
+        if cls is None:
+            try:
+                row = [self.__session.query(table).all() for table in classes]
+            except exc.NoForeignKeysError:
+                row = []
         else:
-            result = self.__session.query((State, City).outerjoin(City)).all()
+            row = self.__session.query(cls).all()
 
         query_result = {}
-        for obj in result:
+        for obj in row:
             if cls is not None:
                 key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                obj.__dict__ = obj.to_dict()
                 query_result[key] = obj
             else:
                 for row in obj:
@@ -62,3 +72,14 @@ class DBStorage:
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session)
         self.__session = Session()
+
+    def truncate_tables(self, cls, id):
+        row = self.__session.query(cls).get(id)
+        if row:
+            self.__session.delete(row)
+            self.__session.commit()
+
+    def close_session(self):
+        row = self.__session.query(cls).get(id)
+        if row:
+            self.__session.close()
