@@ -83,3 +83,7 @@ class DBStorage:
         row = self.__session.query(cls).get(id)
         if row:
             self.__session.close()
+
+    def close(self):
+        """ """
+        self.__session.close()
